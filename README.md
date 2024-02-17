@@ -14,6 +14,8 @@ Clone this repo, then install dependencies and build with:
 npm run setup
 ```
 
+Copy contents of `example.env` to `.env`
+
 You only really need the `connections` and `streams` sections populated in your `.env` file.
 
 Set the `LOG_LEVEL_FOR_SERVICES` to `warn` or `error` to filter out the info logs coming from the boilerplate services and client.
