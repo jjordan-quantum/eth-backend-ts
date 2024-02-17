@@ -42,7 +42,7 @@ Client.stream.on('receipts', (receipts) => {
 });
 
 Client.stream.on('log', (log) => {
-  logger.info(`[Event] New logs event received`);
+  logger.info(`[Event] New log event received`);
 });
 
 Client.stream.on('transfer', (transfer) => {
