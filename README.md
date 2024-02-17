@@ -47,6 +47,7 @@ Still a work in progress, but here is the roadmap:
  - option to use webhook-based alerts
  - use pm2 runtime to keep alive (DONE)
  - support containerization
+ - dashboard
  - caching all data from the last 'N' blocks (DONE)
  - capturing / logging metrics (IN PROGRESS)
  - utilize bloxroute streams
