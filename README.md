@@ -73,3 +73,11 @@ Still a work in progress, but here is the roadmap:
  - simulate pending txns (eth-call + traceCall)
  - MEV support
  - compute proofs on each block
+
+Testing TODOs:
+ - cache classes
+ - blockchain client
+ - fetchers
+ - filters
+ - subscriptions
+ - utils
