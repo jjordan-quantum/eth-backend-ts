@@ -4,6 +4,7 @@ import EventEmitter from "events";
 import {setIntervalNoConcurrency} from "set-interval-non-concurrent";
 import {settings} from "./config/settings";
 import MemoryMetrics from "./services/metrics/MemoryMetrics";
+import LogRotator from "./lib/LogRotator";
 
 export class Client {
   static stream: EventEmitter = new EventEmitter();
@@ -25,5 +26,6 @@ export class Client {
     }
 
     BlockchainClient.start();
+    LogRotator.start();
   }
 }

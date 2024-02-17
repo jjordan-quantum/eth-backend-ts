@@ -22,6 +22,8 @@ Set the `LOG_LEVEL_FOR_SERVICES` to `warn` or `error` to filter out the info log
 
 Set `LOG_TO_FILE` to `true` to log to file for services.  The example in `src/main.ts` is using a separate logger that will still log to console.
 
+Set `ROTATE_LOG_FILES` to `true` to rotate logs. Will rotate every 1 hr - will add options for this
+
 Look at the examples for using the streams in `src/main.ts`
 
 Then start the client using pm2 runtime with the command:
@@ -54,7 +56,7 @@ Still a work in progress, but here is the roadmap:
  - stream gas price info
  - stream mempool gas price info
  - use PINO for logging (DONE)
- - log rotation for PINO
+ - log rotation for PINO (IN PROGRESS)
  - option to use API-based logging
  - option to use webhook-based alerts
  - use pm2 runtime to keep alive (DONE)

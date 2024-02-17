@@ -7,6 +7,7 @@ export type Settings = {
   logToFile: boolean,
   logFilePath: string,
   logFileName: string,
+  rotateLogFiles: boolean,
   disableLoggingForServices: boolean,
   logLevelForService: string,
   websocketUrl: string;
@@ -81,6 +82,7 @@ export const settings: Settings = {
   logToFile: (process.env.LOG_TO_FILE || '').toLowerCase() === 'true' || false,
   logFilePath: process.env.LOG_FILE_PATH || 'logs',
   logFileName: process.env.LOG_FILE_NAME || 'debug.log',
+  rotateLogFiles: process.env.ROTATE_LOG_FILES ? (process.env.ROTATE_LOG_FILES.toLowerCase() === 'true') : true,
   disableLoggingForServices: (process.env.DISABLE_LOGGING_FOR_SERVICES || '').toLowerCase() === 'true' || false,
   logLevelForService: (!!process.env.LOG_LEVEL_FOR_SERVICES && LOG_LEVELS.includes(process.env.LOG_LEVEL_FOR_SERVICES))
     ? (process.env.LOG_LEVEL_FOR_SERVICES)
