@@ -42,6 +42,7 @@ Still a work in progress, but here is the roadmap:
  - stream gas price info
  - stream mempool gas price info
  - use PINO for logging (DONE)
+ - log rotation for PINO
  - option to use API-based logging
  - option to use webhook-based alerts
  - use pm2 runtime to keep alive (DONE)
