@@ -9,6 +9,8 @@ import {UniswapV2ERC20ABI} from "../abis/UniswapV2ERC20ABI";
 import {MAINNET_USDC} from "../types/constants";
 import {Client} from "../Client";
 import BlockHeaderCache from "../cache/BlockHeaderCache";
+import BlockHeaderSubscription from "../services/subscriptions/BlockHeaderSubscription";
+import LogSubscription from "../services/subscriptions/LogSubscription";
 
 class BlockchainClient extends StaticComponent {
   static websocketUrl: string;
@@ -19,9 +21,6 @@ class BlockchainClient extends StaticComponent {
   static blockNumber: number;
   static isHttpConnectionValid: boolean = false;
   static isWebsocketConnectionValid: boolean = false;
-  static subscriptionStatus: boolean = false;
-  static subscription: any | undefined;
-  static subscriptionId: string | undefined;
   static tokenContract: any;
   static highestBlockNumber: number = 0;
   static startBlockNumber: number = 0;
@@ -231,101 +230,33 @@ class BlockchainClient extends StaticComponent {
 
   // ===================================================================================================================
   //
-  //  subscription
+  //  subscriptions
   //
   // ===================================================================================================================
 
   static start(): void {
     this.log(`Starting newBlockHeader subscription...`);
-    this.subscribe();
-  }
+    // todo - confirm which subscriptions to start in settings
 
-  static subscribe(
-    retries: number = 0,
-    recursiveReconnect: boolean = false
-  ): void {
-    try {
-      this.unsubscribe();
-      const maxSubscriptionReconnectTries = settings.maxSubscriptionReconnectTries;
-      const SUBSCRIBE_RETRY_DELAY_MILLISECONDS = settings.subscribeRetryDelayMs;
-      const subscribeLongPauseMs = settings.subscribeLongPauseMs;
+    if(
+      settings.streamBlockHeaders
+      || settings.streamBlockTransactions
+      || settings.streamBlockLogs
+      || settings.streamBlockReceipts
+      || settings.streamBlockErc20Transfers
+      || settings.streamBlockNftTransfers
+    ) {
+      BlockHeaderSubscription.subscribe();
+    }
 
-      this.subscription = this.websocketClient.eth.subscribe('newBlockHeaders')
-        .on('connected', function(subscriptionId) {
-          BlockchainClient.subscriptionId = subscriptionId;
-          BlockchainClient.subscriptionStatus = true;
-          BlockchainClient.log(`Subscribed to new block headers with subscription id: ${subscriptionId}`);
-        })
-        .on('data', async function(block: any) {
-          if(block) {
-            //console.log(block);  // TODO - remove
-            const blockNumber = block.number;
-            const timestamp = Date.now();
-            const age = timestamp - (block.timestamp * 1000);
-            BlockchainClient.log(`RECEIVED BLOCK ${blockNumber} FROM SUBSCRIPTION @ ${timestamp}ms (AGE=${age}ms)`);
-            BlockchainClient.highestBlockNumber = Math.max(blockNumber, BlockchainClient.highestBlockNumber);
-
-            // emit event
-            Client.stream.emit('block', {...block});
-            BlockHeaderCache.set(blockNumber, {...block});
-
-            BlockHeaderProcessor.apply(
-              {...block},
-              blockNumber,
-              BlockchainClient.chainId,
-            ).then();
-          } else {
-            BlockchainClient.error(`Block undefined`);
-          }
-        })
-        .on('error', async function(error: any) {
-          BlockchainClient.error(`newBlockHeader subscription encountered an error`, error);
-
-          if(retries < maxSubscriptionReconnectTries) {
-            setTimeout(function () {
-              BlockchainClient.subscribe(retries + 1);
-            }, SUBSCRIBE_RETRY_DELAY_MILLISECONDS);
-          } else {
-            BlockchainClient.subscriptionStatus = false;
-
-            BlockchainClient.error(
-              `Failed to reconnect to subscription after ${maxSubscriptionReconnectTries} retries - waiting longer`,
-              undefined
-            );
-
-            setTimeout(function () {
-              BlockchainClient.subscribe();
-            }, subscribeLongPauseMs);
-          }
-        })
-    } catch(e: any) {
-      this.error(`Error subscribing to new block headers`, e);
+    if(
+      settings.streamLogs
+      || settings.streamErc20Transfers
+      || settings.streamNftTransfers
+    ) {
+      LogSubscription.subscribe();
     }
   }
-
-  static unsubscribe(): void {
-    try {
-      const subscriptionHandle = this.subscription;
-      this.subscription = undefined;
-
-      if(subscriptionHandle) {
-        this.log(`Unsubscribing from block headers from previous subscription ${subscriptionHandle.id}`);
-
-        subscriptionHandle.unsubscribe(function(error: any, success: any){
-          if(success) {
-            BlockchainClient.log(`Successfully unsubscribed from block headers for subscription ${subscriptionHandle.id}`);
-          }
-        });
-      } else {
-        this.log(`No existing subscription found`);
-      }
-    } catch(e) {
-      this.error(`Failed to unsubscribe from block headers`, e);
-    }
-  }
-
-  // TODO - logs subscription
-  // TODO - pending txn subscription
 }
 
 export default BlockchainClient;

@@ -8,7 +8,7 @@ import BlockHeaderCache from "../../cache/BlockHeaderCache";
 import BlockTxnCache from "../../cache/BlockTxnCache";
 import ReceiptCache from "../../cache/ReceiptCache";
 import EventLogCache from "../../cache/EventLogCache";
-import EventLogFilter from "../filters/EventLogFilter";
+import EventLogsFilter from "../filters/EventLogsFilter";
 import TransferEventCache from "../../cache/TransferEventCache";
 
 export class BlockHeaderProcessor extends StaticComponent {
@@ -54,8 +54,8 @@ export class BlockHeaderProcessor extends StaticComponent {
         // todo - confirm success
       }
 
-      if(settings.filterErc20TransferEvents) {
-        EventLogFilter.apply(blockNumber);
+      if(settings.streamBlockErc20Transfers) {
+        EventLogsFilter.apply(blockNumber);
       }
 
       const end = Date.now();

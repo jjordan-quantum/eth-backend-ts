@@ -1,4 +1,4 @@
-#### eth-backend-ts
+### eth-backend-ts
 
 Boilerplate code for backend Ethereum app.
 
@@ -14,15 +14,25 @@ Clone this repo, then install dependencies and build with:
 npm run setup
 ```
 
+You only really need the `connections` and `streams` sections populated in your `.env` file.
+
+Set the `LOG_LEVEL_FOR_SERVICES` to `warn` or `error` to filter out the info logs coming from the boilerplate services and client.
+
+Set `LOG_TO_FILE` to `true` to log to file for services.  The example in `src/main.ts` is using a separate logger that will still log to console.
+
+Look at the examples for using the streams in `src/main.ts`
+
 Then start the client using pm2 runtime with the command:
+
+```typescript
+npm run start:pm2
+```
+
+Or with node:
 
 ```typescript
 npm start
 ```
-
-You only really need the `connections` and `streams` sections populated in your `.env` file.
-
-Look at the examples for using the streams in `src/main.ts`
 
 Still a work in progress, but here is the roadmap:
 
@@ -30,9 +40,9 @@ Still a work in progress, but here is the roadmap:
  - stream block transactions (DONE)
  - stream block logs (DONE)
  - stream block receipts (DONE)
- - stream ERC20 transfer events (IN PROGRESS)
+ - stream ERC20 transfer events (DONE)
  - stream NFT transfer events
- - stream individual logs
+ - stream individual logs (DONE)
  - stream pending transactions
  - stream traces
  - stream contract creations

@@ -1,9 +1,11 @@
-// /import {getPinoPrettyFileLogger} from "../config/getPinoPrettyFileLogger";
+import {getPinoPrettyFileLogger} from "../config/getPinoPrettyFileLogger";
 import {getPinoPrettyLogger} from "../config/getPinoPrettyLogger";
+import {settings} from "../config/settings";
 
 export class Logger {
-  //static logger = getPinoPrettyFileLogger();
-  static logger = getPinoPrettyLogger();
+  static logger = (settings.logToFile)
+    ? getPinoPrettyFileLogger(settings.logFileName, settings.logFilePath, settings.logLevelForService)
+    : getPinoPrettyLogger(settings.logLevelForService);
 
   static info(message: string): void {
     this.logger.info(message);

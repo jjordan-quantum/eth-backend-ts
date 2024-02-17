@@ -11,3 +11,13 @@ export enum Metrics {
   requests='requests',
   messages='messages',
 }
+
+export const LOG_LEVELS: string[] = [
+  'fatal',
+  'error',
+  'warn',
+  'info',
+  'debug',
+  'trace',
+  'silent',
+];

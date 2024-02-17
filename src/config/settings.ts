@@ -1,8 +1,14 @@
 import {config} from "dotenv";
 import {getRandom} from "../utils/getRandom";
+import {LOG_LEVELS} from "../types/constants";
 config();
 
 export type Settings = {
+  logToFile: boolean,
+  logFilePath: string,
+  logFileName: string,
+  disableLoggingForServices: boolean,
+  logLevelForService: string,
   websocketUrl: string;
   jsonRpcUrl: string;
   chainId: number;
@@ -41,12 +47,15 @@ export type Settings = {
   pendingMessageTtyMs: number;
 
   // data streams config
+  streamBlockHeaders: boolean;
   streamBlockTransactions: boolean;
   streamBlockLogs: boolean;
   streamBlockReceipts: boolean;
   streamBlockErc20Transfers: boolean;
   streamBlockNftTransfers: boolean;
   streamLogs: boolean;
+  streamErc20Transfers: boolean;
+  streamNftTransfers: boolean;
   streamPendingTransactionHashes: boolean;
   streamPendingTransactions: boolean;
 
@@ -60,7 +69,6 @@ export type Settings = {
   logsFetcherMaxRetries: number;
 
   // filter settings
-  filterErc20TransferEvents: boolean;
 
   // cache
   maxBlocksInCache: number;
@@ -70,6 +78,13 @@ export type Settings = {
 }
 
 export const settings: Settings = {
+  logToFile: (process.env.LOG_TO_FILE || '').toLowerCase() === 'true' || false,
+  logFilePath: process.env.LOG_FILE_PATH || 'logs',
+  logFileName: process.env.LOG_FILE_NAME || 'debug.log',
+  disableLoggingForServices: (process.env.DISABLE_LOGGING_FOR_SERVICES || '').toLowerCase() === 'true' || false,
+  logLevelForService: (!!process.env.LOG_LEVEL_FOR_SERVICES && LOG_LEVELS.includes(process.env.LOG_LEVEL_FOR_SERVICES))
+    ? (process.env.LOG_LEVEL_FOR_SERVICES)
+    : 'info',
   websocketUrl: process.env.WEBSOCKET_URL as string,
   jsonRpcUrl: process.env.JSON_RPC_URL as string,
   chainId: parseInt(process.env.CHAIN_ID as string),
@@ -125,12 +140,15 @@ export const settings: Settings = {
   // pendingMessageTtyMs: parseInt(process.env.PENDING_MESSAGE_TTY_MS || '60000'),
   pendingMessageTtyMs: 30000,
 
+  streamBlockHeaders: (process.env.STREAM_BLOCK_HEADERS || '').toLowerCase() === 'true' || false,
   streamBlockTransactions: (process.env.STREAM_BLOCK_TRANSACTIONS || '').toLowerCase() === 'true' || false,
   streamBlockLogs: (process.env.STREAM_BLOCK_LOGS || '').toLowerCase() === 'true' || false,
   streamBlockReceipts: (process.env.STREAM_BLOCK_RECEIPTS || '').toLowerCase() === 'true' || false,
   streamBlockErc20Transfers: (process.env.STREAM_BLOCK_ERC20_TRANSFERS || '').toLowerCase() === 'true' || false,
   streamBlockNftTransfers: (process.env.STREAM_BLOCK_NFT_TRANSFERS || '').toLowerCase() === 'true' || false,
   streamLogs: (process.env.STREAM_LOGS || '').toLowerCase() === 'true' || false,
+  streamErc20Transfers: (process.env.STREAM_ERC20_TRANSFERS || '').toLowerCase() === 'true' || false,
+  streamNftTransfers: (process.env.STREAM_NFT_TRANSFERS || '').toLowerCase() === 'true' || false,
   streamPendingTransactionHashes: (process.env.STREAM_PENDING_TRANSACTION_HASHES || '').toLowerCase() === 'true' || false,
   streamPendingTransactions: (process.env.STREAM_PENDING_TRANSACTIONS || '').toLowerCase() === 'true' || false,
 
@@ -143,8 +161,6 @@ export const settings: Settings = {
 
   logsFetcherRetryTimeoutMs: parseInt(process.env.LOGS_FETCHER_RETRY_TIMEOUT_MS || '100'),
   logsFetcherMaxRetries: parseInt(process.env.LOGS_FETCHER_MAX_RETRIES || '1'),
-
-  filterErc20TransferEvents: (process.env.FILTER_ERC20_TRANSFER_EVENTS || '').toLowerCase() === 'true' || false,
 
   maxBlocksInCache: parseInt(process.env.MAX_BLOCKS_IN_CACHE || '50'),
 
