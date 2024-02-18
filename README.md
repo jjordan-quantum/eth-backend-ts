@@ -47,16 +47,35 @@ Still a work in progress, but here is the roadmap:
  - stream ERC20 transfer events (DONE)
  - stream NFT transfer events
  - stream individual logs (DONE)
+ - stream individual transactions
+ - stream individual receipts
+ - stream pending transaction hashes
  - stream pending transactions
- - stream traces
+ - stream logs emitted from pending transactions (per transaction)
+ - stream pending transaction state changes (per transaction)
+ - stream pending transaction traces (per transaction)
+ - stream traces per confirmed block
+ - stream traces per confirmed transaction
+ - stream individual traces
  - stream contract creations
  - stream balance changes
  - stream storage updates
  - stream MEV transactions
  - stream gas price info
- - stream mempool gas price info
+   - block base fee per gas
+   - next block min base fee + max base fee
+   - block gas utilization
+ - stream mempool / gas price info
+   - update on each new txn:
+     - highest gas price in mempool
+     - lowest gas price in mempool
+     - avg gas price in mempool
+     - # txns in mepool
+     - # txns with gas price below next block base fee
+     - # of txns at the next nonce
+     - high/low/avg gas price in mempool for next nonce txns
  - use PINO for logging (DONE)
- - log rotation for PINO (IN PROGRESS)
+ - log rotation for PINO (DONEish)
  - option to use API-based logging
  - option to use webhook-based alerts
  - use pm2 runtime to keep alive (DONE)
@@ -66,6 +85,7 @@ Still a work in progress, but here is the roadmap:
  - capturing / logging metrics (IN PROGRESS)
  - utilize bloxroute streams
  - delay streams by 'N' confirmations
+   - IE new block received -> get data from 'N' blocks ago for stream
  - handle reorgs
  - support multiple evm chains
  - adding filters to each stream
